@@ -28,10 +28,6 @@ class Login extends Component{
             }else {
                 message.error(data.message);
             }
-        },err=>{
-            console.log("校验失败"+err);
-        }).catch(errorInfo => {
-            console.log("校验异常"+errorInfo);
         });
     };
     render() {

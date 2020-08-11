@@ -50,6 +50,7 @@ class Category extends Component {
      */
     getProductCategoryList=async ()=>{
         const {parentId}=this.state;
+        this.setState({loading:true})
         const result=await categoryService.getProductCategoryList(parentId);
        if (result.success){
            const categoryData=result.data;
@@ -111,7 +112,24 @@ class Category extends Component {
     添加分类
      */
     addCategory=()=>{
-        message.info('addCategory')
+        this.form.current.validateFields().then(async values=>{
+            // 1.隐藏框
+            this.setState({
+                showStatus:0
+            })
+            // 2.发请求更新分类
+            const {categoryName,parentId} = values;  //得到子组件传过来的
+            const params={parentId:parentId,categoryName:categoryName}
+            // 清除输入数据
+            this.form.current.resetFields();
+            const result = await categoryService.insertProductCategory(params);
+            if (result.success){
+                // 3.重新更新列表
+                this.getProductCategoryList();
+            }else {
+                message.error(result.message);
+            }
+        })
     };
 
     /*
@@ -129,7 +147,27 @@ class Category extends Component {
     更新分类
      */
     updateCategory=()=>{
-        message.info('updateCategory')
+        // 表单验证
+        this.formRef.current.validateFields().then(async values => {
+            // 1.隐藏框
+            this.setState({
+                showStatus:0
+            })
+            // 2.发请求更新分类
+            const categoryId=this.category.id;
+            const {categoryName} = values  //得到子组件传过来的
+            const params={id:categoryId,categoryName:categoryName}
+            // 清除输入数据
+            this.formRef.current.resetFields();
+            const result = await categoryService.updateProductCategory(params);
+            if (result.success){
+                // 3.重新更新列表
+                this.getProductCategoryList();
+            }else {
+                message.error(result.message);
+            }
+        })
+
     };
 
     /*
@@ -152,7 +190,7 @@ class Category extends Component {
                 添加
             </Button>
         );
-        const category=this.category;
+        const category=this.category || {} //如果还没有指定一个空对象;
         const {
             categoryData,
             loading,
@@ -194,7 +232,10 @@ class Category extends Component {
                     okText="确认"
                     cancelText="取消"
                 >
-                    <AddForm />
+                    <AddForm
+                        setForm={(form)=>{this.form=form}}
+                        categorys={categoryData}
+                        parentId={parentId} />
                 </Modal>
 
                 <Modal
@@ -206,6 +247,7 @@ class Category extends Component {
                     cancelText="取消"
                 >
                  <UpdateForm
+                    setForm={(formRef)=>{this.formRef=formRef}}
                     categoryName={category.categoryName}
                  />
                 </Modal>
