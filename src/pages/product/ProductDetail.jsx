@@ -10,7 +10,6 @@ const Item = List.Item;
 class ProductDetail extends Component {
     render() {
         const state=this.props.location.state;
-        console.info(state)
         const title = (
             <span>
                 <LinkButton>

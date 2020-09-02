@@ -13,11 +13,12 @@
     "jsonp": "^0.2.1",
     "less": "^3.11.3",
     "less-loader": "^6.2.0",
+    "moment": "^2.27.0",
+    "prop-types": "latest",
     "react": "^16.13.1",
     "react-app-rewired": "^2.1.6",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1",
-    "prop-types": "latest"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-app-rewired start",

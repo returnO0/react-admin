@@ -8,14 +8,17 @@
 
 import axios from 'axios';
 import {message} from 'antd';
+
 const httpFetch={
+
     get(url,data){
         return new Promise(((resolve, reject) => {
             let promise;
             promise=axios.get(url,{
-                params:data
+                params:data,
             });
             promise.then(response=>{
+                debugger
                 resolve(response.data)
             }).catch(error=>{
                 message.error("服务器异常"+error)

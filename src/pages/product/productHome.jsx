@@ -18,14 +18,19 @@ class ProductHome extends Component {
             parentName: '',     //当前显示分类名称
             showStatus: 0,      //标识添加/更新的确认框是否显示(0:都不显示,1:显示添加,2:显示更新)
             pagination:{        //分页参数
-                defaultCurrent:1,
-                defaultPageSize:5,
+                current:1,
+                pageSize:5,
                 pageSizeOptions:[5,10,20,50],
                 showSizeChanger:true,
                 onChange:(page,size)=>{
-                    this.getProducts(page,size);
+                    const {pagination} = this.state
+                    pagination.current=page;
+                    pagination.pageSize=size
+                    this.getProducts(page,size)
                 },
             },
+            page:0,
+            size:5,
             searchType:'name',  //搜索类型
             searchValue: '',    //搜索类容
         };
@@ -33,7 +38,7 @@ class ProductHome extends Component {
 
     componentWillMount() {
         const {pagination}=this.state;
-        this.getProducts(pagination.defaultCurrent,pagination.defaultPageSize);
+        this.getProducts(pagination.current,pagination.pageSize);
         this.initColumns();
     }
 
@@ -162,7 +167,11 @@ class ProductHome extends Component {
                     value={searchValue}
                     onChange={event=>{this.setState({searchValue:event.target.value})}}
                 />
-                <Button type="primary" onClick={this.getProducts}>搜索</Button>
+                <Button type="primary" onClick={()=>{
+                    pagination.current=1;
+                    this.setState({pagination})
+                    this.getProducts(1,pagination.pageSize)
+                }}>搜索</Button>
             </span>
         )
         // card 右上角

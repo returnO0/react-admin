@@ -15,7 +15,7 @@ class Login extends Component{
     并且需要在<Form>中指定 ref={this.formRef}
      */
     formRef = React.createRef();
-    handleSubmit= event =>{
+    handleSubmit= values =>{
         this.formRef.current.validateFields(  ).then( async value => {
             const data= await loginService.login(value.username,value.password);
             if (data.success){

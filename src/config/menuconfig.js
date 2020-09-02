@@ -23,6 +23,16 @@ const menuList= [
         }]
     },
     {
+      title:'货物管理',
+        icon : <PieChartOutlined />,
+        key : '/cargo',
+        children:[{
+            title:'货物列表',
+            key:'/cargo/cargoList',
+            icon: <PieChartOutlined />
+        }]
+    },
+    {
         title:'用户管理',
         key:'/user',
         icon:<TeamOutlined />

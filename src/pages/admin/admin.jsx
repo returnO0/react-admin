@@ -11,6 +11,7 @@ import Role from "../role/role";
 import Bar from "../charts/bar";
 import Line from "../charts/line"
 import Pie from "../charts/pie";
+import CargoList from "../cargo/cargoList";
 
 const {Content, Footer, Sider } = Layout;
 /*
@@ -23,7 +24,6 @@ class Admin extends Component{
 
 
     onCollapse = collapsed => {
-        console.log(collapsed);
         this.setState({ collapsed });
     };
     render() {
@@ -51,6 +51,7 @@ class Admin extends Component{
                             <Route path='/charts/bar' component={Bar} />
                             <Route path='/charts/line' component={Line} />
                             <Route path='/charts/pie' component={Pie} />
+                            <Route path='/cargo/cargoList' component={CargoList}/>
                             <Redirect to='/home' />
                         </Switch>
                     </Content>
