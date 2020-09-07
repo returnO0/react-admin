@@ -18,7 +18,6 @@ const httpFetch={
                 params:data,
             });
             promise.then(response=>{
-                debugger
                 resolve(response.data)
             }).catch(error=>{
                 message.error("服务器异常"+error)

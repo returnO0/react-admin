@@ -1,43 +1,76 @@
 import React, {Component} from 'react'
-import {Popconfirm,Button, Card, message, Table} from "antd";
-import cargoService from "../../api/cargoService";
-import CargoDetail from "./cargoDetail";
-import LinkButton from "../../components/link-button";
-import CargoAdd from "./cargoAdd";
+import {Tag,Popconfirm,Button, Card, message, Table} from "antd";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import transactionService from "../../../api/transactionService";
+import TransactionDetail from "./transactionDetail";
+import LinkButton from "../../../components/link-button";
+import TransactionAdd from "./transactionAdd";
+
 /**
  *
  */
 
-class CargoList extends Component {
+class TransactionList extends Component {
     constructor(props) {
         super(props);
-        this.state={
+        this.state = {
             columns:[
+                {
+                    title:'交易流水号',
+                    align:'center',
+                    dataIndex:'id',
+                },
                 {
                     title:'货物名称',
                     align:'center',
-                    dataIndex:'name',
+                    dataIndex:'cargoName',
                 },
                 {
-                    title:'货物价格',
+                    title:'交易人名称',
                     align:'center',
-                    dataIndex:'price',
+                    dataIndex:'userName',
                 },
                 {
-                    title:'货物库存',
+                    title:'交易单价',
                     align:'center',
-                    dataIndex:'inventory',
+                    dataIndex:'unitPrice',
                 },
                 {
-                    title:'货物备注',
+                    title:'交易数量',
+                    align:'center',
+                    dataIndex:'tradingVolume',
+                },
+                {
+                    title:'交易总金额',
+                    align:'center',
+                    dataIndex:'amount',
+                },
+                {
+                    title:'进货/出货',
+                    align:'center',
+                    dataIndex:'status',
+                    render: status => (
+                        status ?
+                            <Tag color="green">进货</Tag> :
+                            <Tag color="red">出货</Tag>
+                    ),
+
+                },
+
+                {
+                    title:'备注',
                     dataIndex:'note',
                     width:180,
                 },
                 {
-                    title:'创建时间',
+                    title:'交易时间',
                     align:'center',
                     dataIndex:'createDate',
+                },
+                {
+                    title:'最后更新时间',
+                    align:'center',
+                    dataIndex:'lastUpdateDate',
                 },
                 {
                     title:'操作',
@@ -48,7 +81,7 @@ class CargoList extends Component {
                                 <LinkButton onClick={()=>this.showDrawer(record)}>编辑</LinkButton>
                                 <Popconfirm
                                     title="确定要删除吗？(删除的数据将无法恢复)"
-                                    onConfirm={()=>this.deleteCargo(record)}
+                                    onConfirm={()=>this.deleteTransaction(record)}
                                     okText="确定"
                                     cancelText="取消">
                                     <LinkButton>
@@ -72,32 +105,28 @@ class CargoList extends Component {
                     const {pagination} = this.state
                     pagination.current=page;
                     pagination.pageSize=size
-                    this.selectCargoPage(page,size)
+                    this.selectTransactionPage(page,size)
                 },
                 showTotal:(total) => `一共有${total}条数据`,
 
             },
-            cargoData:{},
+            transactionData:{},
         }
     }
 
     componentWillMount() {
         const {pagination}=this.state;
-        this.selectCargoPage(pagination.current,pagination.pageSize)
+        this.selectTransactionPage(pagination.current,pagination.pageSize)
     }
 
-
-
-
-    // 获取表格数据源
-    selectCargoPage=async (page,size)=>{
+    // 获取数据源
+    selectTransactionPage=async (page,size)=>{
         this.setState({loading:true})
         const params={
             page:page-1,
             size:size
         }
-        const result = await cargoService.selectCargoPage(params);
-        // 处理返回结果
+        const result=await transactionService.selectTransactionPage(params);
         if (result.success){
             let pagination = {
                 ...this.state.pagination,
@@ -110,28 +139,28 @@ class CargoList extends Component {
         this.setState({loading:false})
     }
 
-    // 刷新表格
+    // 刷新数据
     reload=()=>{
         const {pagination}=this.state;
-        this.selectCargoPage(pagination.current,pagination.pageSize)
+        this.selectTransactionPage(pagination.current,pagination.pageSize)
     }
 
     // 显示侧边抽屉并将数据传入给子组件
     showDrawer = (record) => {
         this.child.show();
         this.setState({
-            cargoData:record
+            transactionData:record
         });
     };
 
-    // 显示侧边抽屉新增数据
-    showDrawerAdd = () => {
+    // 显示添加侧边框
+    showDrawerAdd = ()=>{
         this.childAdd.show();
-    };
+    }
 
-    // 删除数据
-    deleteCargo = async (record)=>{
-        const result=await cargoService.deleteCargoById(record.id);
+    // 删除单行数据
+    deleteTransaction=async (record)=>{
+        const result=await transactionService.deleteTransactionById(record.id);
         if (result.success){
             message.success('删除成功');
             this.reload();
@@ -140,12 +169,13 @@ class CargoList extends Component {
         }
     }
 
+
     render() {
-        const {columns,loading,pagination,dataSource,cargoData}=this.state;
-        const title='货物管理';
+        const {columns,loading,pagination,dataSource,transactionData}=this.state;
+        const title='交易记录';
         const extra=(
-            <Button type={"primary"} onClick={this.showDrawerAdd} icon={<PlusOutlined />}>
-            添加
+            <Button type={"primary"} onClick={this.showDrawerAdd } icon={<PlusOutlined />}>
+                添加
             </Button>
         )
         return (
@@ -159,18 +189,20 @@ class CargoList extends Component {
                     pagination={pagination}
                 >
                 </Table>
-                <CargoDetail
-                    reload={this.reload}
+
+                {/*页面默认不显示的东西*/}
+                <TransactionDetail
                     onRef={ref=>this.child = ref}
-                    cargoData={cargoData}
-                />
-                <CargoAdd
                     reload={this.reload}
+                    transactionData={transactionData}
+                />
+                <TransactionAdd
                     onRef={ref=>this.childAdd = ref}
+                    reload={this.reload}
                 />
             </Card>
         )
     }
 }
 
-export default CargoList;
+export default TransactionList;

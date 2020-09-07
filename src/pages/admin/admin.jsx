@@ -12,6 +12,8 @@ import Bar from "../charts/bar";
 import Line from "../charts/line"
 import Pie from "../charts/pie";
 import CargoList from "../cargo/cargoList";
+import CustomerList from "../cargo/customer/customerList";
+import TransactionList from "../cargo/transaction/transactionList";
 
 const {Content, Footer, Sider } = Layout;
 /*
@@ -52,6 +54,8 @@ class Admin extends Component{
                             <Route path='/charts/line' component={Line} />
                             <Route path='/charts/pie' component={Pie} />
                             <Route path='/cargo/cargoList' component={CargoList}/>
+                            <Route path='/cargo/transactionList' component={TransactionList}/>
+                            <Route path='/cargo/customerList' component={CustomerList}/>
                             <Redirect to='/home' />
                         </Switch>
                     </Content>

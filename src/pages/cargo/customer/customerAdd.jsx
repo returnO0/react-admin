@@ -1,53 +1,35 @@
-import React,{Component} from "react";
-import {Drawer, Form, Input, DatePicker, Button,message} from 'antd';
-import moment from 'moment';
-import cargoService from "../../api/cargoService";
+import React, {Component} from 'react'
+import {Button, Drawer, Form, Input, message, Radio} from "antd";
+import customerService from "../../../api/customerService";
+
+/**
+ *
+ */
 const {TextArea}=Input;
 const {Item}=Form
-const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-class CargoDetail extends Component {
+class CustomerAdd extends Component {
     formRef = React.createRef();
     constructor(props) {
         super(props);
         this.state={
             // 抽屉的可见性
             visible:false,
-            // 父组件传入的单行数据
-            cargoData: {},
-            // 确认按钮loading效果
         }
-    }
-
-    // 父组件的状态改变时,子组件更新
-    componentWillReceiveProps(nextProps){
-        this.setState({cargoData:nextProps.cargoData})
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         this.props.onRef(this)
-        const {cargoData}=this.state
-        if (cargoData.id&&this.formRef.current){
-            // 日期需要格式化
-            const value  = {
-                ...cargoData,
-                createDate:moment(cargoData.createDate, dateFormat),
-            }
-            this.formRef.current.setFieldsValue(value)
-        }
     }
 
     // 提交表单
     handleSubmit= ()=>{
         this.formRef.current.validateFields().then( async value => {
-            const {cargoData}=this.state;
             // 传入原始参数,和表单的最新值
             const params={
-                ...cargoData,
                 ...value,
-                createDate: cargoData.createDate,
             }
             // 发送保存请求
-            const result =await cargoService.saveCargo(params);
+            const result =await customerService.saveCustomer(params);
             if (result.success){
                 message.success('保存成功')
                 this.props.reload();
@@ -75,16 +57,15 @@ class CargoDetail extends Component {
     };
 
     render() {
-        const {visible,cargoData}=this.state;
+        const {visible}=this.state;
         const formItemLayout = {
             labelCol: { span: 8 },
             wrapperCol: { span: 10, offset: 0 },
         };
-
         return (
             <>
                 <Drawer
-                    title="编辑货物"
+                    title="新增客户信息"
                     width={720}
                     onClose={this.onClose}
                     visible={visible}
@@ -107,11 +88,10 @@ class CargoDetail extends Component {
                         </div>
                     }
                 >
-                    <Form ref={this.formRef} {...formItemLayout}  >
+                    <Form ref={this.formRef} {...formItemLayout} >
                         <Item
-                            label='货物名称'
+                            label='姓名'
                             name="name"
-                            initialValue={cargoData.name}
                             rules={[
                                 {required:true,message:'必须输入货物名称'}
                             ]}
@@ -119,51 +99,38 @@ class CargoDetail extends Component {
                             <Input placeholder="请输入货物名称"/>
                         </Item>
                         <Item
-                            label='货物价格'
-                            name="price"
-                            initialValue={cargoData.price}
-                            rules={[
-                                {required:true,message:'必须输入货物价格'},
-                                {validator:(rule, value)=>{
-                                        if (value>0){
-                                            return Promise.resolve();
-                                        }else {
-                                            return Promise.reject('货物价格必须大于0')
-                                        }
-                                    }},
-                            ]}
+                            label='性别'
+                            name="sex"
+                            initialValue={true}
                         >
-                            <Input type='number' placeholder="请输入货物价格" addonAfter="元"/>
+                            <Radio.Group>
+                                <Radio value={true}>男</Radio>
+                                <Radio value={false}>女</Radio>
+                            </Radio.Group>
                         </Item>
                         <Item
-                            label='货物库存'
-                            name="inventory"
-                            initialValue={cargoData.inventory}
-                            rules={[
-                                {required:true,message:'必须输入货物库存'}
-                            ]}
+                            label='联系方式'
+                            name="telephone"
                         >
-                            <Input disabled type='number' placeholder="请输入货物库存"/>
+                            <Input placeholder="请输入联系方式"/>
+                        </Item>
+                        <Item
+                            label='地址'
+                            name="address"
+                        >
+                            <TextArea placeholder="请输入地址" autoSize={{minRows:2,maxRows:6}} />
                         </Item>
                         <Item
                             label='备注信息'
                             name="note"
-                            initialValue={cargoData.note}
-                            rules={[
-                                {required:true,message:'必须输入备注信息'}
-                            ]}
                         >
                             <TextArea placeholder="请输入备注信息" autoSize={{minRows:2,maxRows:6}} />
                         </Item>
                         <Item
-                            label='创建时间'
-                            name="createDate"
-                            initialValue={moment(cargoData.createDate, dateFormat)}
-                            rules={[
-                                {required:true,message:'请输入创建时间'}
-                            ]}
+                            label='身份证号'
+                            name="cardNumber"
                         >
-                            <DatePicker disabled format={dateFormat} />
+                            <Input placeholder="请输入身份证号"/>
                         </Item>
 
                     </Form>
@@ -172,5 +139,7 @@ class CargoDetail extends Component {
             </>
         )
     }
+
 }
-export default CargoDetail;
+
+export default CustomerAdd;

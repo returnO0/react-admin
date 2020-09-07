@@ -30,6 +30,14 @@ const menuList= [
             title:'货物列表',
             key:'/cargo/cargoList',
             icon: <PieChartOutlined />
+        },{
+            title:'交易记录',
+            key:'/cargo/transactionList',
+            icon: <PieChartOutlined />
+        },{
+            title:'顾客信息',
+            key:'/cargo/customerList',
+            icon: <PieChartOutlined />
         }]
     },
     {

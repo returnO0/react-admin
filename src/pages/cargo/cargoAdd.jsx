@@ -49,7 +49,6 @@ class CargoAdd extends Component {
 
     // 显示侧边抽屉并将数据传入给子组件
     show=() => {
-        debugger
         this.setState({
             visible: true,
         });
@@ -93,7 +92,7 @@ class CargoAdd extends Component {
                         </div>
                     }
                 >
-                    <Form ref={this.formRef} {...formItemLayout} hideRequiredMark >
+                    <Form ref={this.formRef} {...formItemLayout} >
                         <Item
                             label='货物名称'
                             name="name"
