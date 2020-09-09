@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {Table, Button, Modal, message} from "antd";
+import {Table, Button, Modal, message, Row, Col, Form, Input, Select} from "antd";
 import customerService from "../api/customerService";
 /**
  *
  */
 
 class CustomerModel extends Component {
+    formRef = React.createRef();
     constructor(props) {
         super(props);
         this.state = {
@@ -25,8 +26,8 @@ class CustomerModel extends Component {
             loading:false,
             pagination:{        //分页参数
                 current:1,
-                pageSize:5,
-                pageSizeOptions:[5,10,20,50],
+                pageSize:10,
+                pageSizeOptions:[10,20,50],
                 showSizeChanger:true,
                 onChange:(page,size)=>{
                     const {pagination} = this.state
@@ -112,15 +113,9 @@ class CustomerModel extends Component {
         this.setState({ selectedRowKeys,selectedRows });
     };
 
-    // 重置选中的行数
-    start = () => {
-        this.setState({
-            selectedRows: [],
-        });
-    };
 
     render() {
-        const {loading,dataSource,columns,pagination,selectedRows,selectedRowKeys} =this.state;
+        const {loading,dataSource,columns,pagination,selectedRowKeys} =this.state;
         let selected=selectedRowKeys;
         if (this.props.selectedKey){
             selected=selectedRowKeys.length>0?selectedRowKeys:this.props.selectedKey
@@ -130,10 +125,12 @@ class CustomerModel extends Component {
             type:'radio',
             onChange: this.onSelectChange,
         };
-        const hasSelected = selectedRows.length > 0;
+        const formItemLayout = {
+            labelCol: { span: 8 },
+            wrapperCol: { span: 16, offset: 0 },
+        };
         return (
             <>
-
                 <Modal
                     width='50%'
                     title="顾客信息"
@@ -143,10 +140,51 @@ class CustomerModel extends Component {
                     okText="确认"
                     cancelText="取消"
                 >
-                    <Button type="primary" onClick={this.start} disabled={!hasSelected}>
-                        重置
-                    </Button>
+                    <Form
+                        {...formItemLayout}
+                        ref={this.formRef}
+                        onFinish={this.onFinish}
+                    >
+                        <Row gutter={24}>
+                            <Col span={8}>
+                                <Form.Item
+                                    name="id"
+                                    label="顾客编号"
+                                >
+                                    <Input allowClear placeholder="请输入顾客编号"/>
+                                </Form.Item>
+                            </Col>
+                            <Col span={8}>
+                                <Form.Item
+                                    name="name"
+                                    label="顾客名称"
+                                >
+                                    <Input allowClear placeholder="请输入顾客名称"/>
+                                </Form.Item>
+                            </Col>
+                            <Col
+                                span={8}
+                                style={{
+                                    textAlign: 'right',
+                                }}
+                            >
+                                <Button style={{
+                                    margin: '0 8px',
+                                }} type="primary" htmlType="submit">
+                                    搜索
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        this.formRef.current.resetFields();
+                                    }}
+                                >
+                                    重置
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form>
                     <Table
+                        size='small'
                         bordered
                         rowKey="id"
                         loading={loading}

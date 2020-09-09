@@ -1,12 +1,10 @@
 import React, {Component} from 'react'
-import {Button, DatePicker, Drawer, Form, Input, message, Radio} from "antd";
-import moment from "moment";
+import {Button, Drawer, Form, Input, message, Radio} from "antd";
 import CustomerModel from "../../../components/customerModel";
 import CargoModel from "../../../components/cargoModel";
 import transactionService from "../../../api/transactionService";
 import LinkButton from "../../../components/link-button";
-import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
-import LockOutlined from "@ant-design/icons/lib/icons/LockOutlined";
+import { EditOutlined, LockOutlined,SearchOutlined } from '@ant-design/icons';
 
 /**
  *
@@ -197,6 +195,7 @@ class TransactionAdd extends Component {
                                 ref={ref => {
                                     this.SelectCargo = ref
                                 }}
+                                suffix={<SearchOutlined />}
                                 onFocus={this.onCargoClick}
                                 placeholder={'请选择货物'}
                             />
@@ -215,6 +214,7 @@ class TransactionAdd extends Component {
                                 ref={ref => {
                                     this.SelectCustomer = ref
                                 }}
+                                suffix={<SearchOutlined />}
                                 onFocus={this.onCustomerClick}
                                 placeholder={'请选择交易人'}
                             />
@@ -269,12 +269,10 @@ class TransactionAdd extends Component {
                 <CustomerModel
                     onRef={ref=>this.customerModel = ref}
                     onOk={this.onCustomerOk}
-                    selectedKey={[transactionData.userId]}
                 />
                 <CargoModel
                     onRef={ref=>this.cargoModel = ref}
                     onOk={this.onCargoOk}
-                    selectedKey={[transactionData.cargoId]}
                 />
             </>
         )

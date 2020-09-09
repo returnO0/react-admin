@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {Tag,Popconfirm,Button, Card, message, Table} from "antd";
+import {Tooltip,Tag,Popconfirm,Button, Card, message, Table} from "antd";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import transactionService from "../../../api/transactionService";
 import TransactionDetail from "./transactionDetail";
 import LinkButton from "../../../components/link-button";
 import TransactionAdd from "./transactionAdd";
+import TransactionSearchFrom from "./transactionSearchFrom";
 
 /**
  *
@@ -23,12 +24,24 @@ class TransactionList extends Component {
                 {
                     title:'货物名称',
                     align:'center',
-                    dataIndex:'cargoName',
+                    render:(record =>{
+                        return (
+                            <Tooltip placement="top" title={record.cargoId}>
+                                <span>{record.cargoName}</span>
+                            </Tooltip>
+                        )
+                    })
                 },
                 {
                     title:'交易人名称',
                     align:'center',
-                    dataIndex:'userName',
+                    render:(record =>{
+                        return (
+                            <Tooltip placement="top" title={record.userId}>
+                                <span>{record.userName}</span>
+                            </Tooltip>
+                        )
+                    })
                 },
                 {
                     title:'交易单价',
@@ -98,8 +111,8 @@ class TransactionList extends Component {
             loading:false,
             pagination:{        //分页参数
                 current:1,
-                pageSize:5,
-                pageSizeOptions:[5,10,20,50],
+                pageSize:10,
+                pageSizeOptions:[10,20,50],
                 showSizeChanger:true,
                 onChange:(page,size)=>{
                     const {pagination} = this.state
@@ -120,9 +133,10 @@ class TransactionList extends Component {
     }
 
     // 获取数据源
-    selectTransactionPage=async (page,size)=>{
+    selectTransactionPage=async (page,size,searchParams)=>{
         this.setState({loading:true})
         const params={
+            ...searchParams,
             page:page-1,
             size:size
         }
@@ -172,15 +186,22 @@ class TransactionList extends Component {
 
     render() {
         const {columns,loading,pagination,dataSource,transactionData}=this.state;
-        const title='交易记录';
-        const extra=(
-            <Button type={"primary"} onClick={this.showDrawerAdd } icon={<PlusOutlined />}>
-                添加
-            </Button>
-        )
+        const title=(
+            <TransactionSearchFrom search={this.selectTransactionPage}/>
+        );
         return (
-            <Card title={title} extra={extra}>
+            <Card title={title}>
+                <Button
+                    type={"primary"}
+                    style={{
+                        margin: '10px 0',
+                    }}
+                    onClick={this.showDrawerAdd}
+                    icon={<PlusOutlined />}>
+                    添加
+                </Button>
                 <Table
+                    size="middle"
                     bordered
                     rowKey="id"
                     loading={loading}

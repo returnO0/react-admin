@@ -1,23 +1,23 @@
 import React, {Component} from 'react'
-import {Button, message, Modal, Table} from "antd";
+import {Button, Col, Form, Input, message, Modal, Row, Table} from "antd";
 import cargoService from "../api/cargoService";
-
 /**
  *
  */
 
 class CargoModel extends Component {
+    formRef = React.createRef();
     constructor(props) {
         super(props);
         this.state = {
             columns:[
                 {
-                    title:'用户编号',
+                    title:'货物编号',
                     align:'center',
                     dataIndex: 'id',
                 },
                 {
-                    title:'客户名称',
+                    title:'货物名称',
                     align:'center',
                     dataIndex:'name',
                 },
@@ -31,8 +31,8 @@ class CargoModel extends Component {
             loading:false,
             pagination:{        //分页参数
                 current:1,
-                pageSize:5,
-                pageSizeOptions:[5,10,20,50],
+                pageSize:10,
+                pageSizeOptions:[10,20,50],
                 showSizeChanger:true,
                 onChange:(page,size)=>{
                     const {pagination} = this.state
@@ -119,16 +119,13 @@ class CargoModel extends Component {
         this.setState({ selectedRowKeys,selectedRows });
     };
 
-    // 重置选中的行数
-    start = () => {
-        this.setState({
-            selectedRows: [],
-        });
-    };
-
 
     render() {
-        const {loading,dataSource,columns,pagination,selectedRows,selectedRowKeys} =this.state;
+        const formItemLayout = {
+            labelCol: {span: 8},
+            wrapperCol: {span: 16, offset: 0},
+        };
+        const {loading,dataSource,columns,pagination,selectedRowKeys} =this.state;
         let selected=selectedRowKeys;
         if (this.props.selectedKey){
             selected=selectedRowKeys.length>0?selectedRowKeys:this.props.selectedKey
@@ -138,9 +135,9 @@ class CargoModel extends Component {
             type:'radio',
             onChange: this.onSelectChange,
         };
-        const hasSelected = selectedRows.length > 0;
         return (
             <>
+
                 <Modal
                     width='50%'
                     title="货物信息"
@@ -150,10 +147,51 @@ class CargoModel extends Component {
                     okText="确认"
                     cancelText="取消"
                 >
-                    <Button type="primary" onClick={this.start} disabled={!hasSelected}>
-                        重置
-                    </Button>
+                    <Form
+                        {...formItemLayout}
+                        ref={this.formRef}
+                        onFinish={this.onFinish}
+                    >
+                        <Row gutter={24}>
+                            <Col span={8}>
+                                <Form.Item
+                                    name="id"
+                                    label="货物编号"
+                                >
+                                    <Input allowClear placeholder="请输入货物编号" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={8}>
+                                <Form.Item
+                                    name="name"
+                                    label="货物名称"
+                                >
+                                    <Input allowClear placeholder="请输入货物名称" />
+                                </Form.Item>
+                            </Col>
+                            <Col
+                                span={8}
+                                style={{
+                                    textAlign: 'right',
+                                }}
+                            >
+                                <Button style={{
+                                    margin: '0 8px',
+                                }} type="primary" htmlType="submit">
+                                    搜索
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        this.formRef.current.resetFields();
+                                    }}
+                                >
+                                    重置
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form>
                     <Table
+                        size='small'
                         bordered
                         rowKey="id"
                         loading={loading}

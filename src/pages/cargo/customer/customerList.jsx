@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {Button, Card, message, Popconfirm, Table, Tag} from "antd";
+import {Button, Card, message, Popconfirm, Table, Tag, Tooltip} from "antd";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import LinkButton from "../../../components/link-button";
 import customerService from "../../../api/customerService";
 import CustomerDetail from "./customerDetail";
 import CustomerAdd from "./customerAdd";
+import CustomerSearchForm from "./customerSearchForm";
 
 
 /**
@@ -17,9 +18,15 @@ class CustomerList extends Component {
         this.state = {
             columns:[
                 {
-                    title:'客户名称',
+                    title:'交易人名称',
                     align:'center',
-                    dataIndex:'name',
+                    render:(record =>{
+                        return (
+                            <Tooltip placement="top" title={record.id}>
+                                <span>{record.name}</span>
+                            </Tooltip>
+                        )
+                    })
                 },
                 {
                     title:'性别',
@@ -77,8 +84,8 @@ class CustomerList extends Component {
             loading:false,
             pagination:{        //分页参数
                 current:1,
-                pageSize:5,
-                pageSizeOptions:[5,10,20,50],
+                pageSize:10,
+                pageSizeOptions:[10,20,50],
                 showSizeChanger:true,
                 onChange:(page,size)=>{
                     const {pagination} = this.state
@@ -98,9 +105,10 @@ class CustomerList extends Component {
     }
 
     // 获取数据源
-    selectCustomerPage=async (page,size)=> {
+    selectCustomerPage=async (page,size,searchParams)=> {
         this.setState({loading: true})
         const params = {
+            ...searchParams,
             page: page - 1,
             size: size
         }
@@ -149,15 +157,22 @@ class CustomerList extends Component {
 
     render() {
         const {columns,loading,pagination,dataSource,customerData}=this.state;
-        const title='客户信息管理';
-        const extra=(
-            <Button type={"primary"} onClick={this.showDrawerAdd} icon={<PlusOutlined />}>
-                添加
-            </Button>
-        )
+        const title=(
+            <CustomerSearchForm search={this.selectCustomerPage}/>
+        );
         return (
-            <Card title={title} extra={extra}>
+            <Card title={title}>
+                <Button
+                    type={"primary"}
+                    style={{
+                        margin: '10px 0',
+                    }}
+                    onClick={this.showDrawerAdd}
+                    icon={<PlusOutlined />}>
+                    添加
+                </Button>
                 <Table
+                    size="middle"
                     bordered
                     rowKey="id"
                     loading={loading}

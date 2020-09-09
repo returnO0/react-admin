@@ -43,7 +43,7 @@ class Admin extends Component{
                 </Sider>
                 <Layout className="site-layout">
                     <Header username={user.name} />
-                    <Content style={{ margin: '20px' ,backgroundColor:'#FFF'}}>
+                    <Content style={{ margin: '20px 20px 0px 20px' ,backgroundColor:'#FFF'}}>
                         <Switch>
                             <Route path='/home' component={Home} />
                             <Route path='/category' component={Category} />
@@ -59,7 +59,7 @@ class Admin extends Component{
                             <Redirect to='/home' />
                         </Switch>
                     </Content>
-                    <Footer style={{ textAlign: 'center',color: '#ccc' }}>使用谷歌浏览器并在1920*1080的分辨率下可以获得最佳页面效果</Footer>
+                    <Footer style={{ textAlign: 'center',height:'20px', lineHeight:'5px',color: '#ccc' }}>使用谷歌浏览器并在1920*1080的分辨率下可以获得最佳页面效果</Footer>
                 </Layout>
             </Layout>
         );

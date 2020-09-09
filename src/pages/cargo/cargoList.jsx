@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {Popconfirm,Button, Card, message, Table} from "antd";
+import {Popconfirm, Button, Card, message, Table, Tooltip} from "antd";
 import cargoService from "../../api/cargoService";
 import CargoDetail from "./cargoDetail";
 import LinkButton from "../../components/link-button";
 import CargoAdd from "./cargoAdd";
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
+import CargoSearchForm from "./cargoSearchForm";
 /**
  *
  */
@@ -17,7 +18,13 @@ class CargoList extends Component {
                 {
                     title:'货物名称',
                     align:'center',
-                    dataIndex:'name',
+                    render:(record =>{
+                        return (
+                            <Tooltip placement="top" title={record.id}>
+                                <span>{record.name}</span>
+                            </Tooltip>
+                        )
+                    })
                 },
                 {
                     title:'货物价格',
@@ -65,8 +72,8 @@ class CargoList extends Component {
             loading:false,
             pagination:{        //分页参数
                 current:1,
-                pageSize:5,
-                pageSizeOptions:[5,10,20,50],
+                pageSize:10,
+                pageSizeOptions:[10,20,50],
                 showSizeChanger:true,
                 onChange:(page,size)=>{
                     const {pagination} = this.state
@@ -90,9 +97,10 @@ class CargoList extends Component {
 
 
     // 获取表格数据源
-    selectCargoPage=async (page,size)=>{
+    selectCargoPage=async (page,size,searchParams)=>{
         this.setState({loading:true})
-        const params={
+        let params={
+            ...searchParams,
             page:page-1,
             size:size
         }
@@ -142,15 +150,23 @@ class CargoList extends Component {
 
     render() {
         const {columns,loading,pagination,dataSource,cargoData}=this.state;
-        const title='货物管理';
-        const extra=(
-            <Button type={"primary"} onClick={this.showDrawerAdd} icon={<PlusOutlined />}>
-            添加
-            </Button>
-        )
+        const title=(
+            <CargoSearchForm
+                search={this.selectCargoPage}
+            />
+        );
         return (
-            <Card title={title} extra={extra}>
+            <Card title={title}>
+                <Button
+                    type={"primary"}
+                    style={{
+                        margin: '10px 0',
+                    }}
+                    onClick={this.showDrawerAdd} icon={<PlusOutlined />}>
+                    添加
+                </Button>
                 <Table
+                    size="middle"
                     bordered
                     rowKey="id"
                     loading={loading}

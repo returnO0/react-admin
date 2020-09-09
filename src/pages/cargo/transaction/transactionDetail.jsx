@@ -4,10 +4,8 @@ import moment from "moment";
 import transactionService from "../../../api/transactionService";
 import CustomerModel from "../../../components/customerModel";
 import CargoModel from "../../../components/cargoModel";
-import EditOutlined from "@ant-design/icons/lib/icons/EditOutlined";
-import LockOutlined from "@ant-design/icons/lib/icons/LockOutlined";
+import { EditOutlined, LockOutlined,SearchOutlined } from '@ant-design/icons';
 import LinkButton from "../../../components/link-button";
-
 /**
  *
  */
@@ -215,6 +213,7 @@ class TransactionDetail extends Component {
                                 ref={ref => {
                                     this.SelectCargo = ref
                                 }}
+                                suffix={<SearchOutlined />}
                                 onFocus={this.onCargoClick}
                                 placeholder={'请选择货物'}
                             />
@@ -236,6 +235,7 @@ class TransactionDetail extends Component {
                                     this.SelectCustomer = ref
                                 }}
                                 onFocus={this.onCustomerClick}
+                                suffix={<SearchOutlined />}
                                 placeholder={'请选择交易人'}
                             />
                         </Item>
