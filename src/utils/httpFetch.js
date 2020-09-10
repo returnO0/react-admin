@@ -9,12 +9,13 @@
 import axios from 'axios';
 import {message} from 'antd';
 
+const BASE = '/api'
 const httpFetch={
 
     get(url,data){
         return new Promise(((resolve, reject) => {
             let promise;
-            promise=axios.get(url,{
+            promise=axios.get(BASE+url,{
                 params:data,
             });
             promise.then(response=>{
@@ -27,7 +28,7 @@ const httpFetch={
     post(url,data){
         return new Promise(((resolve, reject) => {
             let promise;
-            promise=axios.post(url,data);
+            promise=axios.post(BASE+url,data);
             promise.then(response=>{
                 resolve(response.data)
             }).catch(error=>{
@@ -38,7 +39,7 @@ const httpFetch={
     put(url,data){
         return new Promise(((resolve, reject) => {
             let promise;
-            promise=axios.put(url,data);
+            promise=axios.put(BASE+url,data);
             promise.then(response=>{
                 resolve(response.data)
             }).catch(error=>{
@@ -49,7 +50,7 @@ const httpFetch={
     delete(url,data){
         return new Promise(((resolve, reject) => {
             let promise;
-            promise=axios.delete(url,{
+            promise=axios.delete(BASE+url,{
                 params:data
             });
             promise.then(response=>{

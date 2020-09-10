@@ -41,7 +41,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8001",
+  "proxy": "http://114.55.92.35:8001",
   "devDependencies": {
     "@ant-design/icons": "latest",
     "react-router-dom": "^5.2.0"

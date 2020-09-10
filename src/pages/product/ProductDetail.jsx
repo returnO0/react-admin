@@ -2,14 +2,20 @@ import React, {Component} from 'react'
 import {Card,List} from "antd";
 import ArrowLeftOutlined from "@ant-design/icons/lib/icons/ArrowLeftOutlined"
 import LinkButton from "../../components/link-button";
+import memoryUtils from "../../utils/memoryUtils";
 /**
  * 商品管理
  */
 
 const Item = List.Item;
 class ProductDetail extends Component {
+
+    componentWillUnmount() {
+        memoryUtils.product={}
+    }
+
     render() {
-        const state=this.props.location.state;
+        const product=memoryUtils.product;
         const title = (
             <span>
                 <LinkButton>
@@ -27,19 +33,19 @@ class ProductDetail extends Component {
                 <List>
                     <Item className="item">
                         <span className="left">商品名称:</span>
-                        <span className="right">{state.name}</span>
+                        <span className="right">{product.name}</span>
                     </Item>
                     <Item className="item">
                         <span className="left">所属分类:</span>
-                        <span className="right">{state.parentName}-->{state.categoryName}</span>
+                        <span className="right">{product.parentName}-->{product.categoryName}</span>
                     </Item>
                     <Item>
                         <span className="left">商品价格:</span>
-                        <span className="right">{state.price}</span>
+                        <span className="right">{product.price}</span>
                     </Item>
                     <Item>
                         <span className="left">商品描述:</span>
-                        <span className="right">{state.description}</span>
+                        <span className="right">{product.description}</span>
                     </Item>
                 </List>
             </Card>

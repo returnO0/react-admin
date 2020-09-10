@@ -3,6 +3,7 @@ import {Card,Form,Input,Cascader,Button,message} from "antd";
 import ArrowLeftOutlined from "@ant-design/icons/lib/icons/ArrowLeftOutlined"
 import LinkButton from "../../components/link-button";
 import categoryService from "../../api/categoryService";
+import memoryUtils from "../../utils/memoryUtils";
 const {Item}=Form;
 const {TextArea}=Input;
 /**
@@ -94,9 +95,9 @@ class ProductAddUpdate extends Component {
 
     componentWillMount() {
         // 取出携带的state
-        const record = this.props.location.state;
+        const record = memoryUtils.product;
         // 保存是否是更新标志
-        this.isUpdate = !!record;
+        this.isUpdate = !!record.id;
         // 保存数据对象
         this.setState({product:record||{}})
     }

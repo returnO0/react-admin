@@ -3,6 +3,7 @@ import  {Card, Button, Select, Input,Table,message} from 'antd'
 import PlusOutlined from "@ant-design/icons/lib/icons/PlusOutlined";
 import LinkButton from "../../components/link-button";
 import productService from "../../api/productService";
+import memoryUtils from "../../utils/memoryUtils";
 /**
  * 商品管理
  */
@@ -86,13 +87,25 @@ class ProductHome extends Component {
                 render:(record)=>{
                     return (
                         <span>
-                            <LinkButton onClick={()=>this.props.history.push('/product/detail',record)}>详情</LinkButton>
-                            <LinkButton>修改</LinkButton>
+                            <LinkButton onClick={()=>this.showDetail(record)}>详情</LinkButton>
+                            <LinkButton onClick={()=>this.showAddUpdate(record)}>修改</LinkButton>
                         </span>
                     )
                 }
             },
         ];
+    }
+
+    showDetail=(product)=>{
+        //缓存product对象
+        memoryUtils.product=product;
+        this.props.history.push('/product/detail')
+    }
+
+    showAddUpdate=(product)=>{
+        //缓存product对象
+        memoryUtils.product=product;
+        this.props.history.push('/product/addUpdate')
     }
 
     // 获取数据

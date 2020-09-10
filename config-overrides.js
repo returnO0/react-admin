@@ -14,7 +14,7 @@ module.exports= override(
         lessOptions:{
             javascriptEnabled: true,
             //1DA57A
-            modifyVars: {'@primary-color':'#1DA57A'},
+            modifyVars: {'@primary-color':'#3E90FF'},
         }
     }),
 );

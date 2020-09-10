@@ -48,7 +48,7 @@ class Login extends Component{
                                 { min:4 ,message:'用户名至少4位'},
                                 { max:12,message:'用户名最多12位'},
                                 { whitespace:true,message:'不允许使用空格'},
-                                { pattern:/^[a-zA-Z0-9_]+$/,message:'用户名必须是由字母,数字或下划线组这个'}
+                                { pattern:/^[a-zA-Z0-9_]+$/,message:'用户名必须是由字母,数字或下划线组成'}
                                 ]}
                         >
                             <Input className="form-input" prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
@@ -60,7 +60,7 @@ class Login extends Component{
                                 { min:4 ,message:'密码至少4位'},
                                 { max:12,message:'密码最多12位'},
                                 { whitespace:true,message:'不允许使用空格'},
-                                { pattern:/^[a-zA-Z0-9_]+$/,message:'密码必须是由字母,数字或下划线组这个'}
+                                { pattern:/^[a-zA-Z0-9_]+$/,message:'密码必须是由字母,数字或下划线组成'}
                             ]}
                         >
                             <Input
